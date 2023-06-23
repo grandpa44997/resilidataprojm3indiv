@@ -1,0 +1,93 @@
+1 - Entidades:
+
+    EMPRESA
+    TECNOLOGIA
+    COLABORADOR
+    EMPR_TECN (tabela de relacionamento entre EMPRESA e TECNOLOGIA)
+
+2 - Campos e Tipos de Dados:
+
+    EMPRESA:
+        id (inteiro, chave primária)
+        nome (texto)
+        endereço (texto)
+        telefone (texto)
+
+    TECNOLOGIA:
+        id (inteiro, chave primária)
+        nome (texto)
+        área (texto)
+
+    COLABORADOR:
+        id (inteiro, chave primária)
+        nome (texto)
+        cargo (texto)
+        id_empresa (inteiro, chave estrangeira referenciando a tabela EMPRESA)
+
+    EMPR_TECN:
+        id_empresa (inteiro, chave estrangeira referenciando a tabela EMPRESA)
+        id_tecnologia (inteiro, chave estrangeira referenciando a tabela TECNOLOGIA)
+
+
+3 - A tabela COLABORADOR tem uma chave estrangeira (id_empresa) que referencia a tabela EMPRESA, indicando que um colaborador está associado a uma 
+empresa.
+    A tabela EMPR_TECN é uma tabela de relacionamento entre as tabelas EMPRESA e TECNOLOGIA, representando quais tecnologias cada empresa está 
+utilizando. Ela possui chaves estrangeiras (id_empresa e id_tecnologia) que referenciam as tabelas EMPRESA e TECNOLOGIA, respectivamente.
+
+
+4 - SIMULAÇÃO
+
+-- Criação do banco de dados
+CREATE DATABASE resiliadata;
+
+-- Utilização do banco de dados
+\c resiliadata;
+
+-- Criação da tabela "empresas"
+CREATE TABLE empresas (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100),
+  localizacao VARCHAR(100)
+);
+
+-- Inserção de dados na tabela "empresas"
+INSERT INTO empresas (nome, localizacao)
+VALUES ('ResiliaTech', 'Rio de Janeiro'),
+       ('ByteCraft', 'São Paulo');
+
+-- Criação da tabela "colaboradores"
+CREATE TABLE colaboradores (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100),
+  cargo VARCHAR(100),
+  id_empresa INT REFERENCES empresas(id)
+);
+
+-- Inserção de dados na tabela "colaboradores"
+INSERT INTO colaboradores (nome, cargo, id_empresa)
+VALUES ('João Silva', 'Desenvolvedor', 1),
+       ('Maria Souza', 'Analista de Dados', 2);
+
+-- Criação da tabela "tecnologias"
+CREATE TABLE tecnologias (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100),
+  area VARCHAR(100)
+);
+
+-- Inserção de dados na tabela "tecnologias"
+INSERT INTO tecnologias (nome, area)
+VALUES ('Python', 'Web Development'),
+       ('SQL', 'Database Management');
+
+-- Criação da tabela "tecnologia_empresa"
+CREATE TABLE tecnologia_empresa (
+  id_tecnologia INT REFERENCES tecnologias(id),
+  id_empresa INT REFERENCES empresas(id),
+  PRIMARY KEY (id_tecnologia, id_empresa)
+);
+
+-- Inserção de dados na tabela "tecnologia_empresa"
+INSERT INTO tecnologia_empresa (id_tecnologia, id_empresa)
+VALUES (1, 1),
+       (2, 2);
